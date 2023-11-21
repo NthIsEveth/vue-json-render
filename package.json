@@ -1,7 +1,7 @@
 {
   "name": "lazy-json-ui",
   "version": "1.0.0",
-  "description": "lazy-json-ui",
+  "description": "vue-json-render",
   "main": "./dist/lazy-json-ui.mjs.js",
   "type": "module",
   "types": "dist/lazy-json-ui.esm.d.ts",

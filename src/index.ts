@@ -1,4 +1,5 @@
-import JsonView from './components/createComponent';
+import JRender from './components/componentsRender';
+export *  from './components/componentsRender';
 export {
-  JsonView
+  JRender
 }

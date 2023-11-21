@@ -1,14 +1,12 @@
-import { reactive, h, VNode, defineComponent, PropType } from "vue";
+import { reactive, h, VNode, defineComponent, PropType, SetupContext, Component } from "vue";
 import { Col, Form, FormItem, Row } from 'ant-design-vue';
 export type ComponentJson = {
-  element: string | VNode,
+  element: string | VNode | Component,
   vmodel: string,
-  on?: Function,
-  props?: Function,
-  attrs?: Record<string, string>
+  props?: (data: Record<string, any>, props: any, context: SetupContext ) => Record<string, any>,
+  hiden?: boolean,
   span?: number,
   children?: string | VNode[],
-  [k: string]: any,
 }
 
 export default defineComponent({
@@ -24,19 +22,19 @@ export default defineComponent({
       default: true,
     }
   },
-  setup(props:any, { expose }: any) {
+  setup(props: any, context: SetupContext) {
     // 初始化表单数据
     const { components, needValidate } = props;
     const originModel: Record<string, any> = {};
     components.forEach((item: ComponentJson) => { originModel[item.vmodel] = undefined })
     const model = reactive(originModel);
     const SpanedForm = components
-      .map(({ element, props, on, span, vmodel, children }: ComponentJson) => 
+      .map(({ element, props: cProps, span, vmodel, children }: ComponentJson) => 
       <Row>
         <Col span={ span || 24 }> { 
           needValidate
-          ? (<Form model={model[vmodel]}><FormItem>{h(element, { props, on }, children)}</FormItem></Form>)
-          : h(element, { props, on})
+          ? (<Form model={model[vmodel]}><FormItem>{h(element, cProps && cProps({ model }, props, context), children) }</FormItem></Form>)
+          : h(element, cProps && cProps({ model }, props, context), children)
           }
           </Col>
       </Row>
