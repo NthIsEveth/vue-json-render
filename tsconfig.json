@@ -1,19 +1,18 @@
 {
   "compilerOptions": {
     "composite":true,
-    "target": "ES2020",
+    "baseUrl": ".",
+    "target": "es2016",
     "useDefineForClassFields": true,
     "module": "ESNext",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "allowJs": false,
+    "noUnusedLocals": true,
+    "lib": ["esnext", "dom"],
     "skipLibCheck": true,
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-   
     "isolatedModules": true,
     "jsx": "preserve",
     "jsxImportSource": "vue",
+    "moduleResolution": "bundler",
     /* Linting */
     "strict": true,
   },
