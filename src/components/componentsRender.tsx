@@ -1,44 +1,53 @@
-import { reactive, h, VNode, defineComponent, PropType, SetupContext, Component } from "vue";
+import { reactive, h, VNode, defineComponent, PropType, SetupContext, Component, ref } from "vue";
 import { Col, Form, FormItem, Row } from 'ant-design-vue';
-export type ComponentJson = {
+export type CJson = {
   element: string | VNode | Component,
-  vmodel: string,
+  label?: string,
+  vmodel?: string,
   props?: (data: Record<string, any>, props: any, context: SetupContext ) => Record<string, any>,
-  hiden?: boolean,
+  hidden?: boolean,
   span?: number,
   children?: string | VNode[],
+  type?: 'select',
+  defaultValue?: any,
 }
 
 export default defineComponent({
-  name: 'JsonView',
+  name: 'CRender',
   props: {
-    // 父组件传入的组件
     components: {
-      type: Object as PropType<ComponentJson[]>,
+      type: Object as PropType<CJson[]>,
       default: [],
     },
     needValidate: {
       type: Boolean,
       default: true,
-    }
+    },
+    layout: {
+      type: String,
+      default: undefined
+    },
   },
   setup(props: any, context: SetupContext) {
-    // 初始化表单数据
     const { components, needValidate } = props;
+    const { expose } = context;
     const originModel: Record<string, any> = {};
-    components.forEach((item: ComponentJson) => { originModel[item.vmodel] = undefined })
+    const form = ref('form');
+    components.forEach((item: CJson) => item.vmodel && (originModel[item.vmodel] = undefined))
     const model = reactive(originModel);
-    const SpanedForm = components
-      .map(({ element, props: cProps, span, vmodel, children }: ComponentJson) => 
-      <Row>
-        <Col span={ span || 24 }> { 
-          needValidate
-          ? (<Form model={model[vmodel]}><FormItem>{h(element, cProps && cProps({ model }, props, context), children) }</FormItem></Form>)
-          : h(element, cProps && cProps({ model }, props, context), children)
-          }
-          </Col>
-      </Row>
-      );
-    return () => h('div', [SpanedForm])
+    expose({ form, model });
+    const onlyInput = ({ element, props: cProps, children }: CJson) => h(element, cProps && cProps({ model }, props, context), children)
+    const InputWithItem = (component: CJson) => {
+      const { type, label } = component;
+      const placeholderPrefix = type ? '请选择' : '请输入';
+      props.placeholder = props.placeholder || `${placeholderPrefix}${label}`;
+      return <FormItem label={label}>{ onlyInput(component) }</FormItem>
+    }
+    const toRender = (item: CJson) =>  needValidate ? InputWithItem(item): onlyInput(item)
+    const cols = components
+      .filter((c:CJson) => c.hidden !== true)
+      .map((item: CJson) => <Col span={ item.span || 24 } key={ item.vmodel }> { toRender(item) }</Col>);
+    const FormView = <Form model={model} layout={ props.layout } ref={form}>{ cols }</Form>;
+    return () => h(Row,{ gutter: 12 },[FormView])
   },
 });
