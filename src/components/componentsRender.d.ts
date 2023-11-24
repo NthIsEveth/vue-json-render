@@ -1,4 +1,5 @@
 import { VNode, PropType, SetupContext, Component } from "vue";
+import { RuleObject } from "ant-design-vue/es/form";
 export type CJson = {
     element: string | VNode | Component;
     label?: string;
@@ -9,6 +10,7 @@ export type CJson = {
     children?: string | VNode[];
     type?: 'select';
     defaultValue?: any;
+    rules?: RuleObject | RuleObject[];
 };
 declare const _default: import("vue").DefineComponent<{
     components: {

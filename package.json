@@ -35,7 +35,7 @@
     "@types/vue": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^6.9.1",
     "@webpack-cli/generators": "^3.0.7",
-    "ant-design-vue": "4.x",
+    "ant-design-vue": "^4.0.7",
     "autoprefixer": "^10.4.15",
     "esbuild": "^0.19.6",
     "eslint": "^8.52.0",
@@ -50,7 +50,7 @@
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "vue": ">=3.2.0",
-    "ant-design-vue": "4.x"
+    "ant-design-vue": "4.x",
+    "vue": ">=3.2.0"
   }
 }

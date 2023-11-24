@@ -1,0 +1,1 @@
+export type HideByVModel = (key:string) => void;
