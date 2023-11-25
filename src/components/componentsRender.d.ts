@@ -1,10 +1,17 @@
-import { VNode, PropType, SetupContext, Component } from "vue";
+import { VNode, PropType, SetupContext, Component, Ref } from "vue";
 import { RuleObject } from "ant-design-vue/es/form";
+type ToExpose = {
+    form: Ref<String>;
+    model: Record<string, any>;
+    addAfter: (key: string, comp: CJson[]) => void;
+    addBefore: (key: string, comp: CJson[]) => void;
+    del: (keys: string[]) => void;
+};
 export type CJson = {
     element: string | VNode | Component;
     label?: string;
     vmodel?: string;
-    props?: (data: Record<string, any>, props: any, context: SetupContext) => Record<string, any>;
+    props?: (toExpose: ToExpose, props: any, context: SetupContext) => Record<string, any>;
     hidden?: boolean;
     span?: number;
     children?: string | VNode[];
@@ -27,7 +34,7 @@ declare const _default: import("vue").DefineComponent<{
     };
 }, () => VNode<import("vue").RendererNode, import("vue").RendererElement, {
     [key: string]: any;
-}>, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, import("vue").EmitsOptions, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}>, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, import("vue").EmitsOptions, "update:components", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     components: {
         type: PropType<CJson[]>;
         default: never[];
