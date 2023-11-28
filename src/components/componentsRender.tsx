@@ -1,19 +1,25 @@
-import { reactive, h, VNode, defineComponent, PropType, SetupContext, Component, ref, Ref } from "vue";
+import { reactive, h, VNode, defineComponent, PropType, SetupContext, Component, ref, Ref, shallowRef, ShallowRef } from "vue";
 import { Col, Form, FormItem, Row } from 'ant-design-vue';
 import { RuleObject } from "ant-design-vue/es/form";
-import { add, delByKey } from './tools'
+import { add, delByKey, setPropsInner, toggle } from './tools'
+
 type ToExpose = {
-  form: Ref<String>, 
-  model: Record<string, any>, 
-  addAfter:(key: string, comp: CJson[]) => void ,
-  addBefore: (key: string, comp: CJson[]) => void, 
-  del: (keys:string[]) => void;
+  form: Ref<String>,
+  model: Record<string, any>,
+  addAfter: (key: string, comp: CJson[]) => void,
+  addBefore: (key: string, comp: CJson[]) => void,
+  del: (keys: string[]) => void;
+  setProps: (props: Record<string, any>, keys: string) => void;
+  show: (key: string) => void;
+  hide: (key: string) => void;
+  components: ShallowRef<CJson[]>
 }
 export type CJson = {
   element: string | VNode | Component,
   label?: string,
-  vmodel?: string,
-  props?: (toExpose:ToExpose, props: any, context: SetupContext) => Record<string, any>,
+  elementKey: string,
+  props?: Record<string, any>,
+  action?: (toExpose: ToExpose, props: any, context: SetupContext) => Record<string, (e?: any) => void>,
   hidden?: boolean,
   span?: number,
   children?: string | VNode[],
@@ -22,7 +28,7 @@ export type CJson = {
   rules?: RuleObject | RuleObject[]
 }
 export default defineComponent({
-  name: 'CRender',
+  name: 'JRender',
   props: {
     components: {
       type: Object as PropType<CJson[]>,
@@ -39,43 +45,41 @@ export default defineComponent({
   },
   emits: ['update:components'],
   setup(props: any, context: SetupContext) {
-    const { components, needValidate } = props;
-    const { expose } = context;
+    const { needValidate } = props;
     const originModel: Record<string, any> = {};
     const form = ref('form');
-    components.forEach((item: CJson) => item.vmodel && (originModel[item.vmodel] = item.defaultValue))
+    const components:ShallowRef<CJson[]> = shallowRef(props.components.map((item: CJson) => {
+      const { element, label, elementKey, props, action, hidden, span, children, type, defaultValue, rules } = item;
+      if (elementKey) originModel[elementKey] = defaultValue
+      return { ...reactive({ label, elementKey, props: { ...props }, hidden, span, rules, defaultValue, type }), element, action, children }
+    }));
+    const { expose } = context;
     const model = reactive(originModel);
-    const del = (keys: Array<string | undefined>) => context.emit('update:components', delByKey(keys, components));
-    const addBefore = (key: string, comp: CJson[] ) =>  context.emit('update:components', add(comp,'before',components, key))
-    const addAfter = (key: string, comp: CJson[]) => context.emit('update:components', add(comp,'after',components, key));
-    const toExpose:ToExpose = { form, model, addAfter, addBefore, del };
-    expose({ form, model, addAfter, addBefore, del });
-    const onlyInput = ({ element, props: cProps, children, vmodel, type, label }: CJson) => {
-      const resolvedProps = cProps ? cProps(toExpose, props, context) : {};
+    const del = (keys: Array<string | undefined>) => delByKey(keys, components);
+    const addBefore = (key: string, comp: CJson[]) => add(comp, 'before', components, key)
+    const addAfter = (key: string, comp: CJson[]) => add(comp, 'after', components, key);
+    const hide = (key: string) => toggle(true, key, components)
+    const show = (key: string) => toggle(false, key, components);
+    const setProps = (props: Record<string, any>, key: string) => setPropsInner(props, components, key);
+    const toExpose: ToExpose = { form, model, addAfter, addBefore, del, setProps, show, hide, components };
+    expose(toExpose);
+    // 这里是否可以用解构?
+    const onlyInput = ({ element, props: cProps, children, elementKey, type, label, action }: CJson) => {
+      const resolvedProps = cProps ? cProps : {};
+      const resolvedEvents = action ? action(toExpose, props, context) : {};
       const placeholderPrefix = type ? '请选择' : '请输入';
-      if (vmodel) {
-        const defaultOnInput = (e: any) => model[vmodel] = e.target.value;
-        const { onInput } = resolvedProps;
-        resolvedProps.value = model[vmodel];
-        resolvedProps.onInput = (e: any) => {
-          defaultOnInput(e);
-          if (onInput) onInput(e)
-        }
-      }
       resolvedProps.placeholder = props.placeholder || `${placeholderPrefix}${label}`;
-      return () => h(element, resolvedProps, children)
+      return h(element, { ...resolvedProps, ...resolvedEvents, 'onUpdate:value': (val: any) => model[elementKey] = val }, { default: () => children })
     }
     const inputWithItem = (component: CJson) => {
-      const { label, rules, vmodel } = component;
-      return <FormItem label={label} rules={rules} name={vmodel}>{onlyInput(component)}</FormItem>
+      const { label, rules, elementKey } = component;
+      return h(FormItem, { rules, label, name: elementKey }, () => onlyInput(component))
     }
     const toRender = (item: CJson) => needValidate ? inputWithItem(item) : onlyInput(item)
     return () => {
       const cols = props.components
-        .filter((c: CJson) => c.hidden !== true)
-        .map((item: CJson) => <Col span={item.span || 24} > {toRender(item)}</Col>);
-      const FormView = <Form model={model} layout={props.layout} ref={form}>{cols}</Form>;
-      return h(Row, { gutter: 12 }, FormView)
+        .map((item: CJson) => h(Col, { span: item.span, style: { display: item.hidden ? 'none' : 'block' } }, () => toRender(item)));
+      return h(Row, { gutter: 12 }, () => h(Form, { model, ref: form, style: { width: '100%' } }, () => cols))
     }
   },
 });

@@ -1,4 +1,4 @@
-import { VNode, PropType, SetupContext, Component, Ref } from "vue";
+import { VNode, PropType, SetupContext, Component, Ref, ShallowRef } from "vue";
 import { RuleObject } from "ant-design-vue/es/form";
 type ToExpose = {
     form: Ref<String>;
@@ -6,12 +6,17 @@ type ToExpose = {
     addAfter: (key: string, comp: CJson[]) => void;
     addBefore: (key: string, comp: CJson[]) => void;
     del: (keys: string[]) => void;
+    setProps: (props: Record<string, any>, keys: string) => void;
+    show: (key: string) => void;
+    hide: (key: string) => void;
+    components: ShallowRef<CJson[]>;
 };
 export type CJson = {
     element: string | VNode | Component;
     label?: string;
-    vmodel?: string;
-    props?: (toExpose: ToExpose, props: any, context: SetupContext) => Record<string, any>;
+    elementKey: string;
+    props?: Record<string, any>;
+    action?: (toExpose: ToExpose, props: any, context: SetupContext) => Record<string, (e?: any) => void>;
     hidden?: boolean;
     span?: number;
     children?: string | VNode[];
