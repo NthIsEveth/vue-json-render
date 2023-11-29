@@ -1,0 +1,56 @@
+{
+  "name": "vue-json-render",
+  "version": "1.0.0",
+  "description": "vue-json-render",
+  "main": "./dist/lazy-json-ui.mjs.js",
+  "type": "module",
+  "types": "dist/lazy-json-ui.esm.d.ts",
+  "files": [
+    "dist",
+    "index.js",
+    "index.mjs"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --emitDeclarationOnly&&rollup -c --environment NODE_ENV:production",
+    "serve": "webpack serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NthIsEveth/lazy-json-ui.git"
+  },
+  "keywords": [
+    "vue",
+    "antd",
+    "element",
+    "form"
+  ],
+  "author": "NthIsEveth",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NthIsEveth/lazy-json-ui/issues"
+  },
+  "homepage": "https://github.com/NthIsEveth/lazy-json-ui#readme",
+  "devDependencies": {
+    "@types/vue": "^2.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
+    "@webpack-cli/generators": "^3.0.7",
+    "ant-design-vue": "^4.0.7",
+    "autoprefixer": "^10.4.15",
+    "esbuild": "^0.19.6",
+    "eslint": "^8.52.0",
+    "eslint-config-standard-with-typescript": "^39.1.1",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-n": "^16.2.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "prettier": "^3.0.2",
+    "rollup-plugin-dts": "^6.1.0",
+    "rollup-plugin-esbuild": "^6.1.0",
+    "rollup-plugin-vue-jsx-compat": "^0.0.6",
+    "typescript": "^5.2.2"
+  },
+  "peerDependencies": {
+    "ant-design-vue": "4.x",
+    "vue": ">=3.2.0"
+  }
+}
