@@ -45,7 +45,6 @@ export default defineComponent({
       default: [12, 12]
     }
   },
-  emits: ['update:components'],
   setup(props: any, context: SetupContext) {
     const originModel: Record<string, any> = {};
     const form = ref();
@@ -90,7 +89,7 @@ export default defineComponent({
     return () => {
       const cols = components.value
         .map((item: CJson) => h(Col, { span: item.span, style: { display: item.hidden ? 'none' : 'block' } }, () => createFormItem(item)));
-      return h(Form, { model, ref: form, style: { width: '100%' } }, () => h(Row, { gutter: [12, 12] }, () => cols))
+      return h(Form, { model, ref: form, style: { width: '100%' }, ...props.formProps }, () => h(Row, { gutter: props.gutter }, () => cols))
     }
   },
 });
