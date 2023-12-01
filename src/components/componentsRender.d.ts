@@ -1,4 +1,4 @@
-import { VNode, PropType, SetupContext, Component, Ref, ShallowRef } from "vue";
+import { VNode, PropType, SetupContext, Component, Ref } from "vue";
 import { RuleObject } from "ant-design-vue/es/form";
 import { FormExpose } from "ant-design-vue/es/form/Form";
 import { Gutter } from "ant-design-vue/es/grid/Row";
@@ -11,7 +11,8 @@ type ToExpose = {
     setProps: (props: Record<string, any>, keys: string) => void;
     show: (key: string) => void;
     hide: (key: string) => void;
-    components: ShallowRef<CJson[]>;
+    components: Ref<CJson[]>;
+    cloneComponents: CJson[];
 };
 export type CJson = {
     element: string | VNode | Component;
@@ -264,7 +265,7 @@ declare const _default: import("vue").DefineComponent<{
     };
 }, () => VNode<import("vue").RendererNode, import("vue").RendererElement, {
     [key: string]: any;
-}>, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, import("vue").EmitsOptions, "update:components", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}>, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, import("vue").EmitsOptions, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     components: {
         type: PropType<CJson[]>;
         default: never[];
