@@ -19,13 +19,20 @@ const setPropsInner = (props: Record<string, any>, source: Ref<CJson[]>, key:str
   const { props: oldProps } = source.value[idx];
   source.value[idx].props = { ...(oldProps || {}), ...props}
 };
-const toggle = (hidden: true | false, key:string,source: Ref<CJson[]>) => {
+const toggle = (hidden: true | false, key:string,source: Ref<CJson[]>, model:Record<string, any>) => {
   const idx = source.value.findIndex((item) => item.elementKey === key);
   if (idx<=-1) {
     console.warn('当前设置的key不存在');
     return;
   }
   source.value[idx].hidden = hidden;
+
+  //同步model中的操作
+  if (hidden) {
+    delete model[key]
+  } else {
+    model[key] = undefined;
+  }
 };
 
 export {
