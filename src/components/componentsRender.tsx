@@ -95,8 +95,6 @@ export default defineComponent({
         .filter(({ hidden }: CJson) => hidden !== true)
         .map((item: CJson) => h(Col, { span: item.span }, () => createFormItem(item)));
     })
-    return () => {
-      return h(Form, { model, ref: form, style: { width: '100%' }, ...props.formProps }, () => h(Row, { gutter: props.gutter }, () => cols.value))
-    }
+    return () => h(Form, { model, ref: form, style: { width: '100%' }, ...props.formProps }, () => h(Row, { gutter: props.gutter }, () => cols.value))
   },
 });
