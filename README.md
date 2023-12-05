@@ -11,122 +11,173 @@
 - ant-design-vue 4.x
 ## example
 ```
+<script setup lang="ts">
 import { JRender, type CJson } from 'vue-json-render';
+import { Input, Button, Select, DatePicker, Checkbox } from 'ant-design-vue';
+import { ref } from 'vue'
 const components: CJson[] = [
   {
     element: Input,
     elementKey: 'inputKey',
-    label: 'World',
+    label: '输入框',
     span: 8,
-    props: () => {
-      return {
-
-      }
+    rules: { required: true, message: '请输入' }
+  },
+  {
+    element: Select,
+    elementKey: 'selectKey',
+    label: '下拉框',
+    span: 8,
+    props: {
+      options: [
+        {
+          label: '选项一',
+          value: '1',
+        },
+        {
+          label: '选项一',
+          value: '2',
+        },
+        {
+          label: '选项一',
+          value: '3',
+        },
+      ]
+    },
+    rules: { required: true, message: '请输入' }
+  },
+  {
+    element: DatePicker,
+    elementKey: 'dateKey',
+    label: '日期选择',
+    span: 8,
+    rules: { required: true, message: '请输入' }
+  },
+  {
+    element: Button,
+    elementKey: 'buttonKey',
+    span: 4,
+    props: {
+      type: 'primary',
+      danger: true,
     },
     action: ({ setProps, model, components, hide, addAfter, addBefore, del, form }, props, context) => {
       return {
-        onChange: (e) => {
+        onclick: () => {
+          setProps({ danger: false }, 'buttonKey')
+        },
+      }
+    },
+    children: '点我设置按钮属性'
+  },
+  {
+    element: Button,
+    elementKey: 'buttonKeyAdd',
+    span: 4,
+    props: {
+      type: 'primary',
+      danger: true,
+    },
+    action: ({ addAfter }, props, context) => {
+      return {
+        onclick: () => {
+          const p:CJson[] = [{
+            element: Checkbox,
+            elementKey: 'checkBoxKey',
+            label: '新标签',
+            span: 8,
+            rules: [{ required: true, message: '不要忽略我这个新增的'}]
+          }]
+          addAfter('dataKey', p);
+        },
+      }
+    },
+    children: 'addAfter'
+  },
+  {
+    element: Button,
+    elementKey: 'buttonKeyAdd',
+    span: 4,
+    props: {
+      type: 'primary',
+      danger: true,
+    },
+    action: ({ addBefore }, props, context) => {
+      return {
+        onclick: () => {
+          const p:CJson[] = [{
+            element: Checkbox,
+            elementKey: 'checkBoxKey',
+            label: '新标签',
+            span: 8,
+            rules: [{ required: true, message: '不要忽略我这个新增的'}]
+          }]
+          addBefore('dateKey', p);
+        },
+      }
+    },
+    children: 'addBefore'
+  },
+  {
+    element: Button,
+    elementKey: 'buttonKeyHide',
+    span: 4,
+    props: {
+      type: 'primary',
+      danger: true,
+    },
+    action: ({ setProps, hide }, props, context) => {
+      return {
+        onclick: () => {
+          hide('dateKey')
+        },
+      }
+    },
+    children: '点我隐藏日期组件'
+  },
+  {
+    element: Button,
+    elementKey: 'buttonKeyHide',
+    span: 4,
+    props: {
+      type: 'primary',
+      danger: true,
+    },
+    action: ({ setProps, hide }, props, context) => {
+      return {
+        onclick: () => {
+          hide('dateKey')
+        },
+      }
+    },
+    children: '点我显示日期组件'
+  },
+  {
+    element: Button,
+    elementKey: 'buttonKeyValidate',
+    span: 4,
+    props: {
+      type: 'primary',
+      danger: true,
+    },
+    action: ({ setProps, form }, props, context) => {
+      return {
+        onclick: () => {
           form.value.validate();
         },
-        onblur: () => {
-          hide('inputKey2');
-          // const options = [{ label: 'aaaa', value: 'bbbb'}];
-          // setProps({ options}, 'inputKey2')
-          // const m = {
-          //   element: Button,
-          //   elementKey: 'inputKey3',
-          //   label: 'World',
-          //   span: 8,
-          // };
-          // addBefore('inputKey', [m])
-        }
       }
     },
-    rules: { required: true, message: '请输入' }
+    children: '点我验证表单'
   },
-
-  // {
-  //   element: Select,
-  //   elementKey: 'inputKey2',
-  //   label: 'hide',
-  //   span: 8,
-  //   // props: {
-  //   //   // options: [
-  //   //   //   {
-  //   //   //     label: '标签一',
-  //   //   //     value: '值一'
-  //   //   //   }]
-  //   // },
-  //   rules: { required: true, message: '请输入k2' }
-  // },
-  {
-    element: Input,
-    elementKey: 'inputKey3',
-    label: 'k3',
-    span: 8,
-    props: {
-      options: [
-        {
-          label: '标签一',
-          value: '值一'
-        }]
-    },
-    action: ({ show }, props, context) => {
-      return {
-        onChange: () => {
-          show('inputKey2');
-          // const options = [{ label: 'aaaa', value: 'bbbb'}];
-          // setProps({ options}, 'inputKey2')
-          // const m = {
-          //   element: Button,
-          //   elementKey: 'inputKey3',
-          //   label: 'World',
-          //   span: 8,
-          // };
-          // addBefore('inputKey', [m])
-        }
-      }
-    },
-    rules: { required: true, message: '请输入' }
-  },
-  {
-    element: Select,
-    elementKey: 'inputKey5',
-    label: 'World',
-    span: 8,
-    props: {
-      options: [
-        {
-          label: '标签一',
-          value: '值一'
-        }]
-    },
-    rules: { required: true, message: '请输入' }
-  },
-  {
-    element: Select,
-    elementKey: 'inputKey4',
-    label: 'World',
-    span: 8,
-    props: {
-      options: [
-        {
-          label: '标签一',
-          value: '值一'
-        }]
-    },
-    rules: { required: true, message: '请输入' }
-  },
-  // {
-  //   element: markRaw(Tag),
-  //   elementKey: 'smc',
-  //   children: 'Hello World',
-  //   // hidden: true,
-  //   props: ({ model }, props, context) => {
-  //     return {
-
-  //     }
-  //   },
-  // },
 ];
+const p = ref();
+const clickMe = () => {
+  p.value.model.inputKey = 888888;
+}
+</script>
+<template>
+  <JRender :components="components" ref="p"/>
+  <Button type="primary" @click="clickMe">点我从组件外访问内部方法属性</Button>
+</template>
+
 ```
