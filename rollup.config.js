@@ -22,7 +22,7 @@ export default [
         jsxFactory: "vueJsxCompat",
       }),
     ],
-		external: ['vue', 'ant-design-vue']
+		external: ['vue', 'ant-design-vue', 'lodash']
   },
 	{
     input: "src/index.ts",

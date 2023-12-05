@@ -17,6 +17,7 @@ type ToExpose = {
 export type CJson = {
     element: string | VNode | Component;
     label?: string;
+    placeholder?: string;
     elementKey: string;
     props?: Record<string, any>;
     action?: (toExpose: ToExpose, props: any, context: SetupContext) => Record<string, any>;

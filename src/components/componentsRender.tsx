@@ -21,6 +21,7 @@ type ToExpose = {
 export type CJson = {
   element: string | VNode | Component,
   label?: string,
+  placeholder?: string,
   elementKey: string,
   props?: Record<string, any>,
   action?: (toExpose: ToExpose, props: any, context: SetupContext) => Record<string, any>,
@@ -81,8 +82,8 @@ export default defineComponent({
       const { action, element, children } = comp;
       const resolvedEvents = action ? action(toExpose, props, context) : {};
       const placeholderPrefix = comp.type ? '请选择' : '请输入';
-      const vmodel = { 'onUpdate:value': (val: any) => model[comp.elementKey] = val }
-      if (comp.props) comp.props.placeholder = props.placeholder || `${placeholderPrefix}${comp.label}`;
+      const vmodel = { 'onUpdate:value': (val: any) => model[comp.elementKey] = val, value: model[comp.elementKey] }
+      if (comp.props) comp.props.placeholder = comp.props.placeholder || `${placeholderPrefix}${comp.label}`;
       return h(element, { ...comp.props, ...resolvedEvents, ...vmodel }, () => children)
     }
     const createFormItem = (component: CJson) => {
