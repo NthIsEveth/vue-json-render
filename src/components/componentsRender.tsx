@@ -2,7 +2,7 @@ import { reactive, h, VNode, defineComponent, PropType, SetupContext, Component,
 import { Col, Form, FormItem, Row } from 'ant-design-vue';
 import { RuleObject } from "ant-design-vue/es/form";
 import { add, delByKey, setPropsInner, toggle } from './tools'
-import { FormExpose, FormProps, } from "ant-design-vue/es/form/Form";
+import { FormExpose, FormProps } from "ant-design-vue/es/form/Form";
 import { Gutter } from "ant-design-vue/es/grid/Row";
 import { cloneDeep } from "lodash";
 
@@ -89,12 +89,8 @@ export default defineComponent({
       const { label, rules, elementKey } = component;
       return h(FormItem, { rules, label, name: elementKey }, () => createInput(component))
     }
-    const cols = computed(() =>{
-      return components
-        .value
-        .filter(({ hidden }: CJson) => hidden !== true)
-        .map((item: CJson) => h(Col, { span: item.span }, () => createFormItem(item)));
-    })
-    return () => h(Form, { model, ref: form, style: { width: '100%' }, ...props.formProps }, () => h(Row, { gutter: props.gutter }, () => cols.value))
+    const cols = computed(() =>components.value.filter(({ hidden }: CJson) => hidden !== true)
+      .map((item: CJson) => h(Col, { span: item.span }, () => createFormItem(item))))
+    return () => h(Form, { model, ref: form, ...props.formProps }, () => h(Row, { gutter: props.gutter }, () => cols.value))
   },
 });
