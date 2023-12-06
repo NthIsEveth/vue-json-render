@@ -1,4 +1,4 @@
-import { reactive, h, VNode, defineComponent, PropType, SetupContext, Component, ref, Ref, markRaw, isRef, unref, isReactive, toRaw, computed } from "vue";
+import { reactive, h, VNode, defineComponent, PropType, SetupContext, Component, ref, Ref, markRaw, isRef, unref, isReactive, toRaw, computed, onMounted } from "vue";
 import { Col, Form, FormItem, Row } from 'ant-design-vue';
 import { RuleObject } from "ant-design-vue/es/form";
 import { add, delByKey, setPropsInner, toggle } from './tools'
@@ -30,7 +30,8 @@ export type CJson = {
   children?: string | VNode[],
   type?: 'select',
   defaultValue?: any,
-  rules?: RuleObject | RuleObject[]
+  rules?: RuleObject | RuleObject[],
+  mounted?: (component: CJson) => void
 }
 export default defineComponent({
   name: 'JRender',
@@ -48,6 +49,7 @@ export default defineComponent({
       default: [12, 12]
     }
   },
+  emits: ['JRmounted'],
   setup(props: any, context: SetupContext) {
     const originModel: Record<string, any> = {};
     const form = ref();
@@ -56,8 +58,9 @@ export default defineComponent({
     if (isReactive(unwrap)) unwrap = toRaw(unwrap);
     const cloneComponents = cloneDeep(unwrap);
     const components: Ref<CJson[]> = ref(unwrap.map((item: CJson) => {
-      const { element, label, elementKey, props: p, action, hidden, span, children, type, defaultValue, rules } = item;
+      const { element, label, elementKey, props: p, action, hidden, span, children, type, defaultValue, rules, mounted } = item;
       if (elementKey) originModel[elementKey] = defaultValue
+      if (mounted) onMounted(() => mounted(item))
       const rawElement = typeof element !== 'string' ? markRaw(element) : element;
       const rawChildren = typeof children !== 'string' && typeof children !== 'undefined' ? markRaw(children) : children;
       return {
@@ -92,6 +95,7 @@ export default defineComponent({
     }
     const cols = computed(() =>components.value.filter(({ hidden }: CJson) => hidden !== true)
       .map((item: CJson) => h(Col, { span: item.span }, () => createFormItem(item))))
+    onMounted(() => context.emit('JRmounted'));
     return () => h(Form, { model, ref: form, ...props.formProps }, () => h(Row, { gutter: props.gutter }, () => cols.value))
   },
 });

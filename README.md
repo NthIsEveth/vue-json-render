@@ -88,7 +88,7 @@ const components: CJson[] = [
             span: 8,
             rules: [{ required: true, message: '不要忽略我这个新增的'}]
           }]
-          addAfter('dataKey', p);
+          addAfter('dateKey', p);
         },
       }
     },
