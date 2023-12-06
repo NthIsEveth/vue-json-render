@@ -22,6 +22,7 @@ export type CJson = {
     action?: (toExpose: ToExpose, props: any, context: SetupContext) => Record<string, any>;
     hidden?: boolean;
     span?: number;
+    offsets?: number;
     children?: string | VNode[];
     type?: 'select';
     defaultValue?: any;
@@ -269,6 +270,10 @@ declare const _default: import("vue").DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
+    status: {
+        type: StringConstructor;
+        default: string;
+    };
 }, () => VNode<import("vue").RendererNode, import("vue").RendererElement, {
     [key: string]: any;
 }>, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, import("vue").EmitsOptions, "JRmounted", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
@@ -511,6 +516,10 @@ declare const _default: import("vue").DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
+    status: {
+        type: StringConstructor;
+        default: string;
+    };
 }>>, {
     components: CJson[];
     formProps: Omit<Partial<import("vue").ExtractPropTypes<{
@@ -739,5 +748,6 @@ declare const _default: import("vue").DefineComponent<{
     }>>, "model" | "ref">;
     gutter: Gutter;
     isForm: boolean;
+    status: string;
 }, {}>;
 export default _default;

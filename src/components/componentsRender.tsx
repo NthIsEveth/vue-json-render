@@ -4,7 +4,6 @@ import { RuleObject } from "ant-design-vue/es/form";
 import { add, setPropsInner, toggle } from './tools'
 import { FormExpose, FormProps } from "ant-design-vue/es/form/Form";
 import { Gutter } from "ant-design-vue/es/grid/Row";
-import { cloneDeep } from "lodash";
 
 type ToExpose = {
   form: Ref<FormExpose>,
@@ -26,6 +25,7 @@ export type CJson = {
   action?: (toExpose: ToExpose, props: any, context: SetupContext) => Record<string, any>,
   hidden?: boolean,
   span?: number,
+  offsets?:number,
   children?: string | VNode[],
   type?: 'select',
   defaultValue?: any,
@@ -53,8 +53,8 @@ export default defineComponent({
       default: true,
     },
     status: {
-      type: Boolean,
-      default: true,
+      type: String,
+      default: '',
     },
   },
   emits: ['JRmounted'],
@@ -62,9 +62,9 @@ export default defineComponent({
     const originModel: Record<string, any> = {};
     const form = ref();
     let unwrap = props.components;
+    const cloneComponents = unwrap.map((item:CJson) => ({ ...item }) )
     if (isRef(unwrap)) unwrap = unref(unwrap);
     if (isReactive(unwrap)) unwrap = toRaw(unwrap);
-    const cloneComponents = cloneDeep(unwrap);
     const components: Ref<CJson[]> = ref(unwrap.map((item: CJson) => {
       const { element, label, elementKey, props: p, action, hidden, span, children, type, defaultValue, rules, mounted } = item;
       if (elementKey) originModel[elementKey] = defaultValue
