@@ -31,7 +31,8 @@ export type CJson = {
   type?: 'select',
   defaultValue?: any,
   rules?: RuleObject | RuleObject[],
-  mounted?: (component: CJson) => void
+  mounted?: (component: CJson) => void,
+  custom?: Record<string, any>
 }
 export default defineComponent({
   name: 'JRender',
