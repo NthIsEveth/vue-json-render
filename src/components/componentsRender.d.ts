@@ -7,7 +7,6 @@ type ToExpose = {
     model: Record<string, any>;
     addAfter: (key: string, comp: CJson[]) => void;
     addBefore: (key: string, comp: CJson[]) => void;
-    del: (keys: string[]) => void;
     setProps: (props: Record<string, any>, keys: string) => void;
     show: (key: string) => void;
     hide: (key: string) => void;
@@ -28,6 +27,7 @@ export type CJson = {
     defaultValue?: any;
     rules?: RuleObject | RuleObject[];
     mounted?: (component: CJson) => void;
+    custom?: Record<string, any>;
 };
 declare const _default: import("vue").DefineComponent<{
     components: {
@@ -265,9 +265,13 @@ declare const _default: import("vue").DefineComponent<{
         type: PropType<Gutter>;
         default: number[];
     };
+    isForm: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
 }, () => VNode<import("vue").RendererNode, import("vue").RendererElement, {
     [key: string]: any;
-}>, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, import("vue").EmitsOptions, "JCmounted", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}>, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, import("vue").EmitsOptions, "JRmounted", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     components: {
         type: PropType<CJson[]>;
         default: never[];
@@ -503,6 +507,10 @@ declare const _default: import("vue").DefineComponent<{
         type: PropType<Gutter>;
         default: number[];
     };
+    isForm: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
 }>>, {
     components: CJson[];
     formProps: Omit<Partial<import("vue").ExtractPropTypes<{
@@ -730,5 +738,6 @@ declare const _default: import("vue").DefineComponent<{
         };
     }>>, "model" | "ref">;
     gutter: Gutter;
+    isForm: boolean;
 }, {}>;
 export default _default;
