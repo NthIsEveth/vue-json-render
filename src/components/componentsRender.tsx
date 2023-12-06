@@ -52,6 +52,10 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+    status: {
+      type: Boolean,
+      default: true,
+    },
   },
   emits: ['JRmounted'],
   setup(props: any, context: SetupContext) {
@@ -67,13 +71,7 @@ export default defineComponent({
       if (mounted) onMounted(() => mounted(item))
       const rawElement = typeof element !== 'string' ? markRaw(element) : element;
       const rawChildren = typeof children !== 'string' && children ? markRaw(children) : children;
-      return {
-        element: rawElement,
-        children: rawChildren,
-        action, elementKey, span,
-        type, defaultValue, label,
-        props: p, hidden, rules,
-      };
+      return { element: rawElement, children: rawChildren, action, elementKey, span, type, defaultValue, label, props: p, hidden, rules };
     }));
     const { expose } = context;
     const model = reactive(originModel);
