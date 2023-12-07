@@ -1,27 +1,38 @@
 <h1 align="center">vue-json-render</h1>
 
 ## 用我来做什么
+
 - 通过JSON配置的方式构建ant-design-vue <b>表单类</b> 页面
 - 支持除表单以外的任意其他页面元素渲染
 - <b>提供表单联动相关API,可进行高复杂度的表单联动</b>
 - <b>聚焦表单类问题</b>
+
 ## WHY ME ?
+
 - 将组件逻辑抽象至小粒度的JSON内，方便组件及组件逻辑的抽象;
 - 编码回归到js/ts;
+
 ## 依赖
+
 - 依赖了ant-design-vue 4.x的 Form, FormItem, Row, Col四个组件
 - 表单验证依赖<a>Form</a>及<a>FormItem</a>组件
 - 布局依赖<a>Row</a>及<a>Col</a>组件
+
 ## vue版本
+
 - vue3
+
 ## JRender 组件的API
+
 - components 渲染数据源
-- formProps 透传给 <a link="https://www.antdv.com/components/overview-cn/">ant-design-vue</a> 的 <a>Form</a> 组件的属性 如layout, etc..
-- gutter 透传给 <a>ant-design-vue</a> 的 <a>Row</a> 组件的属性, 控制grid布局下的元素间距
-- isForm 组件是否启用<a>ant-design-vue</a> 的 <a>Form</a> 组件, 设置为<b>false</b>后表单相关的属性失效
+- formProps 透传给 <a href="https://www.antdv.com/components/overview-cn/">ant-design-vue 4.x</a> 的 <a href="https://www.antdv.com/components/form/">Form</a> 组件的属性 如layout, etc..
+- gutter 透传给 <a href="https://www.antdv.com/components/overview-cn/">ant-design-vue</a> 的 <a href="https://www.antdv.com/components/grid">Row</a> 组件的属性, 控制grid布局下的元素间距
+- isForm 组件是否启用<a href="https://www.antdv.com/components/overview-cn/">ant-design-vue 4.x</a> 的 <a href="https://www.antdv.com/components/form/">Form</a> 组件, 设置为<b>false</b>后表单相关的属性失效
 - status 组件附加的状态属性，方便业务逻辑扩展，如编辑态、审核态 ect;
+
 ## CJson 配置使用说明
-- action({setProps, model, components, hide, show, addAfter, addBefore, form, cloneComponents,components }, props, context) 注册组件事件,返用法同render函数的prop参数, 即在事件前加"on"前缀，onClick，onClick,etc... 参考<a>Vue</a> render函数章节
+
+- action({setProps, model, components, hide, show, addAfter, addBefore, form, cloneComponents,components }, props, context) 注册组件事件,返用法同render函数的prop参数, 即在事件前加"on"前缀，onClick，onClick,etc... 参考<a href="https://cn.vuejs.org/guide/extras/render-function.html">Vue的render函数章节</a> 
   - setProps({ disabled: false }, elementKey) 设置 component.elementKey = elementKey 组件的props
   - hide(elementKey); 隐藏 component.elementKey = elementKey 的组件
   - show(elementKey); 显示 component.elementKey = elementKey 的组件
@@ -33,6 +44,7 @@
   - components JRender组件渲染过程中实际使用的配置，修改components会触发视图渲染
   - props JRender组件的setup的props参数,即JRender的Props属性
   - context JRender组件的setup的context参数，即JRender的上下文
+
 ## CJson 类型说明
 
 ```
@@ -55,13 +67,12 @@ export type CJson = {
 }
 ```
 
-## example
+### CJson[] 示例
 
 ```
-// config.js
 const components:CJson[] =  [{
     element: Select,
-    elementKey: 'inputKey',
+    elementKey: 'selectKey',
     label: '输入框',
     span: 8,
     offsets: 2,
@@ -94,7 +105,7 @@ const components:CJson[] =  [{
     mounted: async (record) => {},
   }];
 ```
-
+## example
 ```
 // page.vue
 <script lang="ts" setup>
@@ -105,6 +116,31 @@ import { components } from './pageConfig';
 <template>
  <JRender :components="components" ref="p" @JRmounted="() => { console.log('JRender mounted!')}" />
 </template>
+// pageConfig.ts
+const components = [
+  { 
+    element: Select,
+    elementKey: 'selectKey',
+    label: '输入框',
+    span: 8,
+    offsets: 2,
+    defaultValue:  2,
+    props: {
+      disabled: true,
+      options: [{ label: '选项一', value: '1'}],
+    },
+    type: 'select',
+    hidden: false,
+    rules: { required: true, message: '请输入' },
+    action: ({ setProps, model, components, hide, show, addAfter, addBefore, form }, props, context) => {
+      return {
+        onChange: () => {
+          console.log(model.selectKey)
+        },
+      }
+    },
+    mounted: async (record) => {}
+  }
+];
 
 ```
-
