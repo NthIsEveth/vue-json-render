@@ -109,28 +109,25 @@ const components:CJson[] =  [{
 ```
 // page.vue
 <script lang="ts" setup>
-import { JRender, type CJson } from 'vue-json-render';
-import { Select } from 'ant-design-vue';
+import { JRender } from 'vue-json-render';
 import { components } from './pageConfig';
 </script>
 <template>
  <JRender :components="components" ref="p" @JRmounted="() => { console.log('JRender mounted!')}" />
 </template>
 // pageConfig.ts
-const components = [
+import { Select } from 'ant-design-vue';
+import type { CJson } from 'vue-json-render';
+const components:CJson[] = [
   { 
     element: Select,
     elementKey: 'selectKey',
-    label: '输入框',
+    label: 'hello',
     span: 8,
-    offsets: 2,
-    defaultValue:  2,
     props: {
-      disabled: true,
-      options: [{ label: '选项一', value: '1'}],
+      options: [{ label: '选项一', value: '我是选项一'}],
     },
     type: 'select',
-    hidden: false,
     rules: { required: true, message: '请输入' },
     action: ({ setProps, model, components, hide, show, addAfter, addBefore, form }, props, context) => {
       return {
@@ -142,5 +139,8 @@ const components = [
     mounted: async (record) => {}
   }
 ];
+export {
+  components,
+}
 
 ```
