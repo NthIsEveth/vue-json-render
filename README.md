@@ -1,5 +1,10 @@
 <h1 align="center">vue-json-render</h1>
 
+## 使用方式
+```
+npm i vue-json-render
+```
+
 ## 用我来做什么
 
 - 通过JSON配置的方式构建ant-design-vue <b>表单类</b> 页面
